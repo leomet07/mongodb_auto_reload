@@ -19,12 +19,17 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
-let connect = require("./db")
-
-
+var connect = require("./db")
+const api_routes = require("./routes/api");
+const bodyParser = require("body-parser");
 
 app.use(express.static("public"));
 
+
+app.use(bodyParser.json());
+
+// initiliaze routes
+app.use("/api", api_routes);
 io.on("connection", async function (client) {
     console.log("Client connected...");
 
