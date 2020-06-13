@@ -1,41 +1,60 @@
-const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert");
+const mongoose = require('mongoose');
+const Message = require("./models/message");
+// set up app
 
-// Connection URL
-const url = "mongodb://localhost:27017";
+// connect to mongo db
+mongoose.connect('mongodb://localhost/realtime_message', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(function () {
+    console.log("connected")
+})
+mongoose.Promise = global.Promise
 
-// Database Name
-const dbName = "express_mongo_ninja";
 
 // Use connect method to connect to the server
-async function connect() {
-    let client;
+async function read() {
+    let messages;
     try {
-        let data = [];
-        client = await MongoClient.connect(url, {
-            useUnifiedTopology: true,
-        });
+        messages = await Message.find({
 
-        console.log("Connected successfully to server");
+        })
 
-        const db = client.db(dbName);
+        let preview = JSON.stringify(messages).slice(0, 12)
+        console.log("Read: ", preview)
 
-        const collection = db.collection("ninjas");
+        return messages
 
-        let cursor = collection.find({});
 
-        await cursor.forEach(function (item, err) {
-            assert(err == null);
-
-            data.push(item);
-        });
-
-        return data;
     } catch (err) {
         console.log(err);
+        return err
     } finally {
-        client.close();
-    } // make sure to close your connection after
+
+    }
+}
+// Use connect method to connect to the server
+async function write_message(message) {
+
+    try {
+        Message.create({
+            text: message,
+            date: "time"
+        }).then(function (data) {
+            console.log("Wrote: " + JSON.stringify(data))
+            return data;
+        })
+
+
+
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-module.exports = connect;
+
+module.exports = {
+    read: read,
+    write_message: write_message
+
+};

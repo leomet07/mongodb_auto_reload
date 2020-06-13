@@ -1,5 +1,16 @@
 const express = require("express");
 const router = express.Router();
+var db = require("../db")
+const send_data = require('../index').send_data;
+
+function message_written() {
+    const subscribers = require('../index').subscribers;
+
+    for (subscriber of subscribers) {
+        console.log("\n\n" + subscriber + " \n\n ")
+        send_data(subscriber)
+    }
+}
 
 // get a list of ninjas from db
 router.get("/ninjas", function (req, res, next) {
@@ -10,11 +21,15 @@ router.get("/ninjas", function (req, res, next) {
 });
 
 // add a new nija to db
-router.post("/ninjas", function (req, res, next) {
-    //console.log(req.body);
+router.post("/post", function (req, res, next) {
+    console.log(req.body);
+    db.write_message(req.body.text)
+    message_written()
     res.send({
-        type: "POST"
+        type: "POST",
+        value: req.body
     })
+
 
 
 });
