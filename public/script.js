@@ -3,7 +3,15 @@ socket.on("connect", function (data) {
     socket.emit("join", "Hello World from client");
 });
 
+let global_data = {}
 socket.on("data", function (message) {
     console.log(message);
-    document.getElementById("message").innerHTML = JSON.stringify(message);
+    global_data = message
+    document.getElementById("message").innerHTML = JSON.stringify(global_data);
+});
+
+socket.on("update", function (message) {
+    console.log(message);
+    global_data.push(message)
+    document.getElementById("message").innerHTML = JSON.stringify(global_data);
 });

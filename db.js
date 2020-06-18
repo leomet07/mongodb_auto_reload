@@ -35,15 +35,16 @@ async function read() {
 }
 // Use connect method to connect to the server
 async function write_message(message) {
-
+    let data;
     try {
-        Message.create({
+        data = await Message.create({
             text: message,
             date: "time"
-        }).then(function (data) {
-            console.log("Wrote: " + JSON.stringify(data))
-            return data;
         })
+
+        console.log("Wrote: " + JSON.stringify(data))
+        return data;
+
 
 
 

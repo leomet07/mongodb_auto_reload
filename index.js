@@ -43,9 +43,16 @@ async function send_data(id) {
     io.to(id).emit('data', text)
 
 }
+async function update_data(id, written) {
+    console.log("update_data called")
+
+    io.to(id).emit('update', written)
+
+}
 module.exports = {
     subscribers: subscribers,
-    send_data: send_data
+    send_data: send_data,
+    update_data: update_data
 
 }
 

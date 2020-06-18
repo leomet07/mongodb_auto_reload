@@ -3,7 +3,7 @@ const router = express.Router();
 var db = require("../db");
 
 
-function message_written() {
+function message_written(written) {
     const index = require("../index");
     console.log("Index: ", index);
     const subscribers = index.subscribers;
@@ -12,7 +12,7 @@ function message_written() {
 
     for (subscriber of subscribers) {
         console.log("\n\n" + subscriber + " \n\n ");
-        index.send_data(subscriber);
+        index.update_data(subscriber, written);
     }
 
 }
@@ -25,10 +25,11 @@ router.get("/ninjas", function (req, res, next) {
 });
 
 // add a new nija to db
-router.post("/post", function (req, res, next) {
+router.post("/post", async function (req, res, next) {
     console.log(req.body);
-    db.write_message(req.body.text);
-    message_written();
+    let wrote = await db.write_message(req.body.text);
+    console.log("WROTE: ", wrote)
+    message_written(wrote);
     res.send({
         type: "POST",
         value: req.body,
