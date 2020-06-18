@@ -1,51 +1,51 @@
 const express = require("express");
 const router = express.Router();
-var db = require("../db")
-const send_data = require('../index').send_data;
+var db = require("../db");
+
 
 function message_written() {
-    const subscribers = require('../index').subscribers;
+    const index = require("../index");
+    console.log("Index: ", index);
+    const subscribers = index.subscribers;
+
+
 
     for (subscriber of subscribers) {
-        console.log("\n\n" + subscriber + " \n\n ")
-        send_data(subscriber)
+        console.log("\n\n" + subscriber + " \n\n ");
+        index.send_data(subscriber);
     }
+
 }
 
 // get a list of ninjas from db
 router.get("/ninjas", function (req, res, next) {
     res.send({
-        type: "GET"
-    })
-
+        type: "GET",
+    });
 });
 
 // add a new nija to db
 router.post("/post", function (req, res, next) {
     console.log(req.body);
-    db.write_message(req.body.text)
-    message_written()
+    db.write_message(req.body.text);
+    message_written();
     res.send({
         type: "POST",
-        value: req.body
-    })
-
-
-
+        value: req.body,
+    });
 });
 
 // update a ninja in the db
 router.put("/ninjas/:id", function (req, res, next) {
     res.send({
-        type: "PUT"
-    })
-
+        type: "PUT",
+    });
 });
 
 router.delete("/ninjas/:id", function (req, res, next) {
     res.send({
-        type: "DELETE"
-    })
+        type: "DELETE",
+    });
 });
 
 module.exports = router;

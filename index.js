@@ -38,6 +38,7 @@ io.on("connection", async function (client) {
 });
 
 async function send_data(id) {
+    console.log("send_data called")
     text = await db.read()
     io.to(id).emit('data', text)
 
